@@ -1,9 +1,0 @@
-// Chaveamento de Futsal
-digraph {
-	nodesep=1.0 rankdir=LR ranksep=2.0 splines=polyline
-	Team0 [label="INFO6A (0 pts)" shape=rect]
-	Team1 [label="INFO4B (0 pts)" shape=rect]
-	Match0_0 [label="" shape=ellipse]
-	Team0 -> Match0_0
-	Team1 -> Match0_0
-}

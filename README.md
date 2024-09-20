@@ -25,3 +25,25 @@ Para enviar notificações por e-mail, configure o backend SMTP no `settings.py`
 ## Deployment
 O sistema pode ser hospedado usando a Vercel. Certifique-se de que todas as configurações estão corretas antes de fazer o deploy.
 
+## Para rodar o projeto e necessario baixar as dependencias
+python3 -m venv env
+source env/bin/activate
+
+python manage.py runserver
+
+
+## Baixar o django no ambiente virtual
+pip install django
+sudo apt update
+sudo apt install python3 python3-pip
+sudo apt-get install graphviz
+pip install graphviz
+
+
+## Criar Admin
+python manage.py createsuperuser
+
+
+## Fazer Migracoes para o BD
+python manage.py makemigrations
+python manage.py migrate
