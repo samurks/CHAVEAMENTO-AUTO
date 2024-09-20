@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>{% block title %}IFMS Sports Management{% endblock %}</title>
+    <style>
+        .auth-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: {% if user.is_authenticated %}#28a745{% else %}#dc3545{% endif %};
+            border: 1px solid #fff;
+        }
+        .logout-link {
+            position: fixed;
+            bottom: 30px;
+            left: 10px;
+        }
+    .btn-group .btn {
+        margin-right: 5px;
+    }
+    .btn-group .btn:last-child {
+        margin-right: 0;
+    }
+
+    </style>
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+    
+    <div class="auth-indicator"></div>
+    {% if user.is_authenticated %}
+    <div class="logout-link">
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+        </form>
+    </div>
+    {% endif %}
+</body>
+</html>

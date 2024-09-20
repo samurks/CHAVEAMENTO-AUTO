@@ -1,42 +1,90 @@
+# core/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from .models import Team, Player, Match  
-from .forms import SignUpForm  
-from .utils import generate_bracket
+from django.contrib.auth import login, authenticate, logout
+from django.http import HttpResponse, JsonResponse, FileResponse
+from django.template.loader import render_to_string
+from .models import Team, Player, Match, Modalidade
+from .forms import SignUpForm
+from .utils import generate_bracket_visual
+import logging
 
+logger = logging.getLogger(__name__)
 
 def index(request):
-    return render(request, 'core/index.html')
+    """
+    Página inicial do sistema.
+    """
+    logger.info("Carregando a página inicial.")
+    modalidades = Modalidade.objects.all()
+    if not modalidades:
+        logger.warning("Nenhuma modalidade encontrada.")
+    return render(request, 'core/index.html', {'modalidades': modalidades})
 
+@login_required
 def add_player(request):
+    """
+    Adiciona um jogador a um time específico.
+    """
+    team_id = request.GET.get('team')
     if request.method == 'POST':
         name = request.POST['name']
         age = request.POST['age']
         position = request.POST['position']
-        team_id = request.POST['team']
-        team = get_object_or_404(Team, pk=team_id)
+        team = get_object_or_404(Team, pk=request.POST['team'])
         Player.objects.create(name=name, age=age, team=team, is_if_student=True)
+        logger.info(f"Jogador {name} adicionado ao time {team.name}.")
         return redirect('team_detail', pk=team.id)
-    return render(request, 'core/add_player.html', {'teams': Team.objects.all()})
+    return render(request, 'core/add_player.html', {'teams': Team.objects.filter(id=team_id) if team_id else Team.objects.all()})
 
+@login_required
 def add_team(request):
+    """
+    Adiciona um novo time ao sistema e redireciona para adicionar jogadores.
+    """
     if request.method == 'POST':
         name = request.POST['name']
         location = request.POST['location']
-        player_ids = request.POST.getlist('players')
-        team = Team.objects.create(name=name, sport="Futebol", leader=request.user)  # Exemplo: esporte fixo
-        for player_id in player_ids:
-            player = get_object_or_404(Player, pk=player_id)
-            player.team = team
-            player.save()
-        return redirect('team_list')
-    return render(request, 'core/add_team.html', {'players': Player.objects.filter(team__isnull=True)})
+        modalidade_id = request.POST['modalidade']
+        modalidade = get_object_or_404(Modalidade, pk=modalidade_id)
+        team = Team.objects.create(name=name, modalidade=modalidade, leader=request.user)
+        logger.info(f"Time {name} adicionado com sucesso na modalidade {modalidade.nome}.")
+        return redirect('add_player')
+    return render(request, 'core/add_team.html', {'players': Player.objects.filter(team__isnull=True), 'modalidades': Modalidade.objects.all()})
+
+
+
+@login_required
+def bracket_view(request, modalidade_slug=None):
+    try:
+        modalidade = get_object_or_404(Modalidade, slug=modalidade_slug)
+        logger.info(f"Modalidade selecionada: {modalidade.nome}.")
+
+        visual_path = generate_bracket_visual(modalidade)
+        if visual_path:
+            return FileResponse(open(visual_path, 'rb'), content_type='image/svg+xml')
+        
+        return HttpResponse("Erro ao gerar o chaveamento.", status=500)
+    
+    except Exception as e:
+        logger.error(f"Erro ao gerar o bracket: {e}")
+        return HttpResponse("Erro ao gerar o chaveamento. Verifique os detalhes do erro no log.", status=500)
+    
+    
+
+class ModalidadeListView(ListView):
+    """
+    Exibe a lista de todas as modalidades.
+    """
+    model = Modalidade
+    template_name = 'core/modalidade_list.html'
 
 def signup_view(request):
+    """
+    Realiza o cadastro de um novo usuário.
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -45,66 +93,88 @@ def signup_view(request):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('/')
+            logger.info(f"Novo usuário cadastrado: {username}.")
+            return redirect('team_list')
     else:
         form = SignUpForm()
     return render(request, 'core/signup.html', {'form': form})
 
+def logout_view(request):
+    """
+    Realiza o logout do usuário e redireciona para a página de login.
+    """
+    logout(request)
+    logger.info("Usuário desconectado.")
+    return redirect('login')
+
+@login_required 
+def index_js_view(request):
+    """
+    Renderiza a página principal que carrega o conteúdo dinâmico do chaveamento.
+    """
+    logger.info("Carregando a página principal para conteúdo dinâmico.")
+    return render(request, 'core/index_js.html')
+
+@method_decorator(login_required, name='dispatch')
 class TeamListView(ListView):
+    """
+    Exibe a lista de todos os times cadastrados.
+    """
     model = Team
     template_name = 'core/team_list.html'
 
-class MatchDetailView(DetailView):
-    model = Match
-    template_name = 'core/match_detail.html'
-
-@login_required
-def bracket_view(request):
-    bracket = generate_bracket()
-    return render(request, 'core/bracket.html', {'bracket': bracket})
-
 @method_decorator(login_required, name='dispatch')
 class TeamDetailView(DetailView):
+    """
+    Exibe os detalhes de um time específico.
+    """
     model = Team
     template_name = 'core/team_detail.html'
 
 @method_decorator(login_required, name='dispatch')
 class TeamCreateView(CreateView):
+    """
+    Cria um novo time no sistema.
+    """
     model = Team
-    fields = ['name', 'sport', 'leader']
+    fields = ['name', 'modalidade', 'leader']
     template_name = 'core/team_form.html'
     success_url = '/'
 
     def form_valid(self, form):
         form.instance.leader = self.request.user
+        logger.info(f"Novo time criado: {form.instance.name} na modalidade {form.instance.modalidade.nome}.")
         return super().form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class TeamUpdateView(UpdateView):
+    """
+    Atualiza informações de um time existente.
+    """
     model = Team
-    fields = ['name', 'sport']
+    fields = ['name', 'modalidade']
     template_name = 'core/team_form.html'
     success_url = '/'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(leader=self.request.user)
+        return super().get_queryset().filter(leader=self.request.user)
 
 @method_decorator(login_required, name='dispatch')
 class TeamDeleteView(DeleteView):
+    """
+    Exclui um time do sistema.
+    """
     model = Team
     template_name = 'core/team_confirm_delete.html'
     success_url = '/'
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset.filter(leader=self.request.user)
+        return super().get_queryset().filter(leader=self.request.user)
 
-# Função de notificação
-def notify_user(user_email, subject, message):
-    send_mail(
-        subject,
-        message,
-        'admin@ifms.com',
-        [user_email],
-    )
+@method_decorator(login_required, name='dispatch')
+class MatchDetailView(DetailView):
+    """
+    Exibe os detalhes de um jogo específico.
+    """
+    model = Match
+    template_name = 'core/match_detail.html'

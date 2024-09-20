@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container dynamic-content">
     <h2>Adicionar Time</h2>
-    <form method="post">
+    <form method="post" action="{% url 'add_team' %}" id="addTeamForm">
         {% csrf_token %}
         <label for="name">Nome do Time:</label>
         <input type="text" id="name" name="name" required>
@@ -10,10 +10,10 @@
         <label for="location">Localidade:</label>
         <input type="text" id="location" name="location" required>
         
-        <label for="players">Jogadores:</label>
-        <select id="players" name="players" multiple>
-            {% for player in players %}
-            <option value="{{ player.id }}">{{ player.name }}</option>
+        <label for="modalidade">Modalidade:</label>
+        <select id="modalidade" name="modalidade" required>
+            {% for modalidade in modalidades %}
+            <option value="{{ modalidade.id }}">{{ modalidade.nome }}</option>
             {% endfor %}
         </select>
         

@@ -1,11 +1,9 @@
-/* Estilos gerais */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
   color: #333;
 }
 
-/* Container Principal */
 .container {
   width: 80%;
   margin: 0 auto;
@@ -15,7 +13,6 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Cabeçalho e Navegação */
 header h1 {
   color: #009739;
 }

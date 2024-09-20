@@ -1,16 +1,50 @@
+
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container dynamic-content">
     <header>
         <h1>IFMS - Gerenciador de Chaveamento</h1>
-        <nav>
-            <a href="{% url 'add_player' %}" class="btn">Adicionar Jogador</a>
-            <a href="{% url 'add_team' %}" class="btn">Adicionar Time</a>
-        </nav>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="modalidadeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Selecione a Modalidade
+            </button>
+            <div class="dropdown-menu" aria-labelledby="modalidadeDropdown">
+                {% for modalidade in modalidades %}
+                    <a class="dropdown-item" href="#" data-id="{{ modalidade.slug }}">{{ modalidade.nome }}</a>
+                {% endfor %}
+            </div>
+        </div>
     </header>
-    <footer>
-        <a href="{% url 'login' %}" class="link">Login</a>
-        <a href="{% url 'signup' %}" class="link">Cadastro</a>
-    </footer>
+    <div id="main-content">
+        <p>Selecione uma modalidade acima para visualizar o chaveamento e times.</p>
+    </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function(event) {
+                event.preventDefault();
+                const modalidadeSlug = this.getAttribute('data-id');
+                window.location.href = `/bracket/${modalidadeSlug}/`; 
+            });
+        });
+
+        function loadContent(url) {
+            console.log(`Requisição de conteúdo para: ${url}`);
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    console.log("Conteúdo recebido:");
+                    document.getElementById('main-content').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar o conteúdo:", error);
+                    document.getElementById('main-content').innerHTML = "<p>Erro ao carregar o conteúdo. Verifique o console para mais detalhes.</p>";
+                });
+                
+        }
+    });
+</script>
 {% endblock %}
+    
