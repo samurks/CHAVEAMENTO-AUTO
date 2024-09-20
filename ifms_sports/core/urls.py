@@ -1,4 +1,3 @@
-
 from django.urls import path
 from .views import (
     signup_view, add_player, add_team, bracket_view, index, 
@@ -6,6 +5,8 @@ from .views import (
     TeamDeleteView, MatchDetailView, ModalidadeListView
 )
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('',  index, name='index'),
@@ -21,4 +22,4 @@ urlpatterns = [
     path('add_player/', add_player, name='add_player'),
     path('add_team/', add_team, name='add_team'),
     path('modalidades/', ModalidadeListView.as_view(), name='modalidades'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

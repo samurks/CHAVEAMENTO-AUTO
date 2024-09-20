@@ -141,6 +141,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'core/static']
 
+
+# Configuração para servir arquivos durante o desenvolvimento
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'static/brackets'
+
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -158,4 +165,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'samuere9@gmail.com'
 EMAIL_HOST_PASSWORD = 'Samuere2105'
-

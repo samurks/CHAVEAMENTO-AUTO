@@ -9,18 +9,18 @@ from .models import Team, Player, Match, Modalidade
 from .forms import SignUpForm
 from .utils import generate_bracket_visual
 import logging
-from .models import Modalidade
 from .forms import ModalidadeForm
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import user_passes_test
+import logging
+import os
+
+
+
+logger = logging.getLogger(__name__)
 
 def is_admin(user):
     return user.is_superuser
-
-logger = logging.getLogger(__name__)
 
 def index(request):
     """
@@ -72,9 +72,10 @@ def add_team(request):
 
 
 
+
 @login_required
 def bracket_view(request, modalidade_slug=None):
-    """
+    """ 
     Exibe a visualização do chaveamento.
     """
     try:
@@ -82,16 +83,14 @@ def bracket_view(request, modalidade_slug=None):
         logger.info(f"Modalidade selecionada: {modalidade.nome}.")
 
         visual_path = generate_bracket_visual(modalidade)
-        if visual_path:
-            return FileResponse(open(visual_path, 'rb'), content_type='image/svg+xml')
-        
-        return HttpResponse("Erro ao gerar o chaveamento.", status=500)
-    
+        if visual_path and os.path.exists(os.path.join(os.getcwd(), visual_path.strip("/"))):
+            return render(request, 'core/bracket.html', {'modalidade_selecionada': modalidade, 'visual_path': visual_path})
+        else:
+            logger.error(f"Arquivo não encontrado: {visual_path}")
+            return HttpResponse("Erro ao gerar o chaveamento. Arquivo não encontrado.", status=500)
     except Exception as e:
         logger.error(f"Erro ao gerar o bracket: {e}")
         return HttpResponse("Erro ao gerar o chaveamento. Verifique os detalhes do erro no log.", status=500)
-    
-    
 
 class ModalidadeListView(ListView):
     """

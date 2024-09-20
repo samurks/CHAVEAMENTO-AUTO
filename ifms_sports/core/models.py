@@ -1,16 +1,15 @@
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-import uuid 
 
 class Modalidade(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.nome) + '-' + str(uuid.uuid4())[:8]
+        # Gere um novo slug com base no nome se o slug não existir ou se o nome mudar
+        if not self.slug or self.slug != slugify(self.nome):
+            self.slug = slugify(self.nome)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -47,4 +46,3 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.team_a} vs {self.team_b}"
-    

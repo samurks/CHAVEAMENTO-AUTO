@@ -1,21 +1,9 @@
-
 {% extends "base.html" %}
 {% block content %}
 <div class="container dynamic-content">
     <h2>Chaveamento dos Jogos - {{ modalidade_selecionada.nome }}</h2>
-    
-    <div id="modalidadeCarrossel" class="btn-group mb-4" role="group">
-        {% for modalidade in modalidades %}
-        <a href="{% url 'modalidade_bracket' modalidade.slug %}" 
-           class="btn {% if modalidade == modalidade_selecionada %}btn-primary{% else %}btn-secondary{% endif %}">
-            {{ modalidade.nome }}
-        </a>
-        {% endfor %}
-    </div>
-
-    <div id="bracket">
-        {% include 'core/bracket_partial.html' %}
-    </div>
+    <object data="{{ visual_path }}" type="image/svg+xml" width="100%" height="500px">
+        <p>Não foi possível carregar o chaveamento. Verifique se o arquivo está disponível.</p>
+    </object>
 </div>
 {% endblock %}
-    

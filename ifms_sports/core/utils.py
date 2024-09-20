@@ -1,14 +1,17 @@
+
 from graphviz import Digraph
 from .models import Team
+import os
 
 def generate_bracket_visual(modalidade, output_format='svg'):
     try:
         teams = list(Team.objects.filter(modalidade=modalidade).order_by('-points'))
         if not teams:
+            print("Nenhum time encontrado para a modalidade fornecida.")
             return None
 
         dot = Digraph(comment=f'Chaveamento de {modalidade.nome}', format=output_format)
-        dot.attr(rankdir='TB', splines='line')
+        dot.attr(rankdir='LR', splines='polyline', nodesep='1.0', ranksep='2.0')
 
         num_rounds = 1
         while 2 ** num_rounds < len(teams):
@@ -37,10 +40,14 @@ def generate_bracket_visual(modalidade, output_format='svg'):
 
             current_round += 1
 
-        output_file = f'bracket_{modalidade.id}.{output_format}'
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        output_dir = os.path.join(base_dir, 'static', 'brackets')
+        os.makedirs(output_dir, exist_ok=True)
+
+        output_file = os.path.join(output_dir, f'bracket_{modalidade.slug}')
         dot.render(output_file, view=False, cleanup=False)
-        return f"{output_file}.{output_format}"
-    
+        print(f"Arquivo de chaveamento gerado: {output_file}.{output_format}")
+        return f"/static/brackets/bracket_{modalidade.slug}.{output_format}"
     except Exception as e:
         print(f"Erro ao gerar o bracket visual: {e}")
         return None
