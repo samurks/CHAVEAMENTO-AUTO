@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Adicionar Time</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Nome do Time:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="location">Localidade:</label>
+        <input type="text" id="location" name="location" required>
+        
+        <label for="players">Jogadores:</label>
+        <select id="players" name="players" multiple>
+            {% for player in players %}
+            <option value="{{ player.id }}">{{ player.name }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit" class="btn">Adicionar Time</button>
+    </form>
+</div>
+{% endblock %}

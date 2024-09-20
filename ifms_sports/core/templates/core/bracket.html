@@ -1,0 +1,52 @@
+<!-- core/templates/core/bracket.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bracket</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Chaveamento dos Jogos</h2>
+        <div id="bracket">
+            {% for match in bracket %}
+                <div class="row my-3">
+                    <div class="col-md-5 text-right">
+                        <strong>{{ match.0.name }}</strong> ({{ match.0.points }} pts)
+                    </div>
+                    <div class="col-md-2 text-center">
+                        {% if match.1 %}
+                            VS
+                        {% else %}
+                            Avançou
+                        {% endif %}
+                    </div>
+                    <div class="col-md-5 text-left">
+                        {% if match.1 %}
+                            <strong>{{ match.1.name }}</strong> ({{ match.1.points }} pts)
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button id="updateBracket" class="btn btn-primary">Atualizar Chaveamento</button>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#updateBracket').click(function(){
+                $.ajax({
+                    url: "{% url 'bracket' %}",
+                    type: "GET",
+                    success: function(data) {
+                        $('#bracket').html($(data).find('#bracket').html());
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <header>
+        <h1>IFMS - Gerenciador de Chaveamento</h1>
+        <nav>
+            <a href="{% url 'add_player' %}" class="btn">Adicionar Jogador</a>
+            <a href="{% url 'add_team' %}" class="btn">Adicionar Time</a>
+        </nav>
+    </header>
+    <footer>
+        <a href="{% url 'login' %}" class="link">Login</a>
+        <a href="{% url 'signup' %}" class="link">Cadastro</a>
+    </footer>
+</div>
+{% endblock %}

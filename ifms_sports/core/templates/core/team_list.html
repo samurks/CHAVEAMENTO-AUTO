@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Teams</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Teams</h1>
+        <a class="btn btn-primary" href="{% url 'team_new' %}">Add New Team</a>
+        <ul class="list-group mt-3">
+            {% for team in object_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'team_detail' team.pk %}">{{ team.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
