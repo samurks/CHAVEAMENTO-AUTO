@@ -15,31 +15,5 @@
     </div>
     <script src="{% static 'js/index.js' %}"></script>
 </body>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-          document.querySelectorAll('.dropdown-item').forEach(item => {
-              item.addEventListener('click', function(event) {
-                  event.preventDefault();
-                  const modalidadeSlug = this.getAttribute('data-id');
-                  window.location.href = `/bracket/${modalidadeSlug}/`;
-              });
-          });
-  
-          function loadContent(url) {
-              console.log(`Requisição de conteúdo para: ${url}`);
-              fetch(url)
-                  .then(response => response.text())
-                  .then(html => {
-                      console.log("Conteúdo recebido:");
-                      document.getElementById('main-content').innerHTML = html;
-                  })
-                  .catch(error => {
-                      console.error("Erro ao carregar o conteúdo:", error);
-                      document.getElementById('main-content').innerHTML = "<p>Erro ao carregar o conteúdo. Verifique o console para mais detalhes.</p>";
-                  });
-          }
-      });
-  </script>
-  
 </html>
     

@@ -1,4 +1,3 @@
-# core/views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
@@ -10,6 +9,16 @@ from .models import Team, Player, Match, Modalidade
 from .forms import SignUpForm
 from .utils import generate_bracket_visual
 import logging
+from .models import Modalidade
+from .forms import ModalidadeForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+
+def is_admin(user):
+    return user.is_superuser
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +26,18 @@ def index(request):
     """
     Página inicial do sistema.
     """
-    logger.info("Carregando a página inicial.")
-    modalidades = Modalidade.objects.all()
-    if not modalidades:
-        logger.warning("Nenhuma modalidade encontrada.")
-    return render(request, 'core/index.html', {'modalidades': modalidades})
+    try:
+        logger.info("Carregando a página inicial.")
+        modalidades = Modalidade.objects.all()
+        if not modalidades:
+            logger.warning("Nenhuma modalidade encontrada.")
+        else:
+            logger.info(f"Modalidades carregadas: {[modalidade.nome for modalidade in modalidades]}")
+        return render(request, 'core/index.html', {'modalidades': modalidades})
+    except Exception as e:
+        logger.error(f"Erro ao carregar a página inicial: {e}")
+        return HttpResponse("Erro ao carregar a página inicial.", status=500)
+
 
 @login_required
 def add_player(request):
@@ -58,6 +74,9 @@ def add_team(request):
 
 @login_required
 def bracket_view(request, modalidade_slug=None):
+    """
+    Exibe a visualização do chaveamento.
+    """
     try:
         modalidade = get_object_or_404(Modalidade, slug=modalidade_slug)
         logger.info(f"Modalidade selecionada: {modalidade.nome}.")
@@ -114,6 +133,33 @@ def index_js_view(request):
     """
     logger.info("Carregando a página principal para conteúdo dinâmico.")
     return render(request, 'core/index_js.html')
+
+
+
+@method_decorator([login_required, user_passes_test(is_admin)], name='dispatch')
+class ModalidadeListView(ListView):
+    model = Modalidade
+    template_name = 'core/modalidade_list.html'
+
+@method_decorator([login_required, user_passes_test(is_admin)], name='dispatch')
+class ModalidadeCreateView(CreateView):
+    model = Modalidade
+    form_class = ModalidadeForm
+    template_name = 'core/modalidade_form.html'
+    success_url = reverse_lazy('modalidade_list')
+
+@method_decorator([login_required, user_passes_test(is_admin)], name='dispatch')
+class ModalidadeUpdateView(UpdateView):
+    model = Modalidade
+    form_class = ModalidadeForm
+    template_name = 'core/modalidade_form.html'
+    success_url = reverse_lazy('modalidade_list')
+
+@method_decorator([login_required, user_passes_test(is_admin)], name='dispatch')
+class ModalidadeDeleteView(DeleteView):
+    model = Modalidade
+    template_name = 'core/modalidade_confirm_delete.html'
+    success_url = reverse_lazy('modalidade_list')
 
 @method_decorator(login_required, name='dispatch')
 class TeamListView(ListView):

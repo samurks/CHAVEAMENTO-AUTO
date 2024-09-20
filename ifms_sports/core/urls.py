@@ -1,14 +1,14 @@
 
 from django.urls import path
 from .views import (
-    signup_view, add_player, add_team, bracket_view, index_js_view,
+    signup_view, add_player, add_team, bracket_view, index, 
     TeamListView, TeamDetailView, TeamCreateView, TeamUpdateView, 
     TeamDeleteView, MatchDetailView, ModalidadeListView
 )
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', index_js_view, name='index'),
+    path('',  index, name='index'),
     path('bracket/<str:modalidade_slug>/', bracket_view, name='modalidade_bracket'),
     path('team/<int:pk>/', TeamDetailView.as_view(), name='team_detail'),
     path('team/new/', TeamCreateView.as_view(), name='team_new'),

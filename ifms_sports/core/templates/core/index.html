@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block content %}
 <div class="container dynamic-content">
@@ -9,9 +8,13 @@
                 Selecione a Modalidade
             </button>
             <div class="dropdown-menu" aria-labelledby="modalidadeDropdown">
-                {% for modalidade in modalidades %}
-                    <a class="dropdown-item" href="#" data-id="{{ modalidade.slug }}">{{ modalidade.nome }}</a>
-                {% endfor %}
+                {% if modalidades %}
+                    {% for modalidade in modalidades %}
+                        <a class="dropdown-item" href="#" data-id="{{ modalidade.slug }}">{{ modalidade.nome }}</a>
+                    {% endfor %}
+                {% else %}
+                    <p>Nenhuma modalidade encontrada. Cadastre novas modalidades para visualizar o chaveamento.</p>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -19,32 +22,4 @@
         <p>Selecione uma modalidade acima para visualizar o chaveamento e times.</p>
     </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.dropdown-item').forEach(item => {
-            item.addEventListener('click', function(event) {
-                event.preventDefault();
-                const modalidadeSlug = this.getAttribute('data-id');
-                window.location.href = `/bracket/${modalidadeSlug}/`; 
-            });
-        });
-
-        function loadContent(url) {
-            console.log(`Requisição de conteúdo para: ${url}`);
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    console.log("Conteúdo recebido:");
-                    document.getElementById('main-content').innerHTML = html;
-                })
-                .catch(error => {
-                    console.error("Erro ao carregar o conteúdo:", error);
-                    document.getElementById('main-content').innerHTML = "<p>Erro ao carregar o conteúdo. Verifique o console para mais detalhes.</p>";
-                });
-                
-        }
-    });
-</script>
 {% endblock %}
-    
