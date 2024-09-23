@@ -1,0 +1,7 @@
+// Chaveamento de Futsal
+digraph {
+	rankdir=TB
+	team_0 [label=INFO6A]
+	bye_1 [label=BYE]
+	team_0 -> match_1
+}

@@ -1,0 +1,29 @@
+// Chaveamento de Futsal
+digraph {
+	nodesep=1.0 rankdir=LR ranksep=1.5 splines=line
+	Match0_0 [label="INFO6A vs INFO3A" shape=box]
+	Team0 [label=INFO6A shape=box]
+	Team0 -> Match0_0
+	Team1 [label=INFO3A shape=box]
+	Team1 -> Match0_0
+	Match0_1 [label="AGRO1A vs INFO1A" shape=box]
+	Team2 [label=AGRO1A shape=box]
+	Team2 -> Match0_1
+	Team3 [label=INFO1A shape=box]
+	Team3 -> Match0_1
+	Match0_2 [label="INFO3B vs AGRO1B" shape=box]
+	Team4 [label=INFO3B shape=box]
+	Team4 -> Match0_2
+	Team5 [label=AGRO1B shape=box]
+	Team5 -> Match0_2
+	Match0_3 [label="Bye vs Bye" shape=box]
+	Match1_0 [label="" shape=box]
+	Match0_0 -> Match1_0
+	Match0_1 -> Match1_0
+	Match1_1 [label="" shape=box]
+	Match0_2 -> Match1_1
+	Match0_3 -> Match1_1
+	Match2_0 [label="" shape=box]
+	Match1_0 -> Match2_0
+	Match1_1 -> Match2_0
+}

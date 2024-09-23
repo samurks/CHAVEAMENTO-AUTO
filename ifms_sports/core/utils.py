@@ -1,17 +1,15 @@
-# core/utils.py
-
 from graphviz import Digraph
-from .models import Team, Modalidade
+from .models import Team, Modality
 import os
 
-def generate_bracket_visual(modalidade, output_format='svg'):
+def generate_bracket_visual(modality, output_format='svg'):
     try:
         # Obter times ordenados por data de criação (para garantir ordem de entrada)
-        teams = list(Team.objects.filter(modalidade=modalidade).order_by('created_at'))
+        teams = list(Team.objects.filter(modality=modality).order_by('created_at'))
         num_teams = len(teams)
         
         if num_teams == 0:
-            print("Nenhum time encontrado para a modalidade fornecida.")
+            print("Nenhum time encontrado para a modality fornecida.")
             return None
         
         # Calcular número de rodadas (potência de 2)
@@ -25,13 +23,12 @@ def generate_bracket_visual(modalidade, output_format='svg'):
             teams.append(None)  # Adiciona espaços vazios para simular "byes"
         
         # Criação do grafo
-        dot = Digraph(comment=f'Chaveamento de {modalidade.nome}', format=output_format)
+        dot = Digraph(comment=f'Chaveamento de {modality.nome}', format=output_format)
         dot.attr(rankdir='LR', splines='line', nodesep='1.0', ranksep='1.5')
 
         round_nodes = {i: [] for i in range(num_rounds + 1)}
         current_round = 0
         
-        # Primeira rodada com pares
         for idx in range(0, len(teams), 2):
             team_a = teams[idx]
             team_b = teams[idx + 1]
@@ -54,7 +51,6 @@ def generate_bracket_visual(modalidade, output_format='svg'):
 
             round_nodes[current_round + 1].append(match_node)
 
-        # Rodadas subsequentes
         for current_round in range(1, num_rounds):
             prev_round_teams = round_nodes[current_round]
             next_round_teams = len(prev_round_teams) // 2
@@ -70,28 +66,24 @@ def generate_bracket_visual(modalidade, output_format='svg'):
                 dot.edge(team_b, match_node)
                 round_nodes[current_round + 1].append(match_node)
 
-        # Diretório de saída para o arquivo do bracket
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         output_dir = os.path.join(base_dir, 'ifms_sports', 'static', 'brackets')
         os.makedirs(output_dir, exist_ok=True)
 
-        # Gerar arquivo final
-        output_file = os.path.join(output_dir, f'bracket_{modalidade.slug}')
+        output_file = os.path.join(output_dir, f'bracket_{modality.slug}')
         dot.render(output_file, view=False, cleanup=False)
         print(f"Arquivo de chaveamento gerado: {output_file}.{output_format}")
-        return f"/static/brackets/bracket_{modalidade.slug}.{output_format}"
+        return f"/static/brackets/bracket_{modality.slug}.{output_format}"
     
     except Exception as e:
         print(f"Erro ao gerar o bracket visual: {e}")
         return None
 
-def populate_modalidades():
-    from .models import Modalidade
+def populate_modality():
+    from .models import Modality
 
-    # Modalidades predefinidas
-    modalidades = ['Volei', 'Futsal', 'Basket', 'Tenis de Mesa']
+    modality = ['Volei', 'Futsal', 'Basket', 'Tenis de Mesa']
 
-    # Verifica se há menos de 3 modalidades e popula se necessário
-    if Modalidade.objects.count() < 3:
-        for nome in modalidades:
-            Modalidade.objects.get_or_create(nome=nome, slug=nome.lower().replace(" ", "_"))
+    if Modality.objects.count() < 3:
+        for nome in modality:
+            Modality.objects.get_or_create(nome=nome, slug=nome.lower().replace(" ", "_"))

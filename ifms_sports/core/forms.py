@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Modalidade, Player, Team
+from .models import Modality, Player, Team
 
 class SignUpForm(UserCreationForm):
     class Meta:
@@ -22,4 +22,4 @@ class PlayerForm(forms.ModelForm):
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
-        fields = ['name', 'leader', 'modalidade']
+        fields = ['name', 'leader', 'modality']

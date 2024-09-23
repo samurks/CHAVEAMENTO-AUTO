@@ -1,0 +1,42 @@
+body {
+  background-color: #f0f0f0;
+}
+
+.navbar-brand {
+  color: #007bff !important;
+}
+
+h1.display-4, .carousel-caption h5 {
+  color: #333;
+}
+
+
+/* Customização dos botões */
+.btn-marinho {
+  background-color: #1a237e; /* Azul marinho */
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.btn-marinho:hover {
+  background-color: #0d1b58; /* Mais escuro no hover */
+}
+/* Customização do carrossel */
+.carousel-item {
+  text-align: center;
+  padding: 40px 20px;
+  min-height: 200px; /* Define um tamanho mínimo para o carrossel */
+}
+
+.carousel-item h5 {
+  font-weight: bold;
+  color: #1a237e; /* Azul marinho */
+}
+
+.carousel-item img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px; /* Espaço entre a imagem e o texto */
+}
+
+

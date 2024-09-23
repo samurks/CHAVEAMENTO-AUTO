@@ -1,18 +1,12 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>Adicionar Equipe</h2>
-<form method="POST">
-    {% csrf_token %}
-    <label for="name">Nome da Equipe:</label>
-    <input type="text" id="name" name="name" required>
-    
-    <label for="leader_id">ID do Líder:</label>
-    <input type="number" id="leader_id" name="leader_id" required>
-
-    <label for="modalidade_id">ID da Modalidade:</label>
-    <input type="number" id="modalidade_id" name="modalidade_id" required>
-    
-    <button type="submit">Adicionar Equipe</button>
-</form>
+<div class="container my-5">
+    <h1 class="text-center">Adicionar Time</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-marinho">Adicionar</button>
+    </form>
+</div>
 {% endblock %}

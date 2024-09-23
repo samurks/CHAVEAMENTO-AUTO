@@ -1,15 +1,16 @@
-# core/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Modalidade, Team, Player, Match
+from .models import Modality, Team, Player, Match, Modality
 from .forms import SignUpForm, PlayerForm, TeamForm
 from .utils import generate_bracket_visual
 
 def index(request):
-    modalidades = Modalidade.objects.all()
-    return render(request, 'core/index.html', {'modalidades': modalidades})
+    modality = Modality.objects.all()
+    print(modality)
+    if not modality.exists():
+        modality = None
+    return render(request, 'core/index.html', {'modality': modality})
 
 def signup_view(request):
     if request.method == 'POST':
@@ -39,7 +40,7 @@ def add_team(request):
         form = TeamForm(request.POST)
         if form.is_valid():
             form.save()
-            generate_bracket_visual(form.cleaned_data['modalidade'])
+            generate_bracket_visual(form.cleaned_data['modality'])
             return redirect('index')
     else:
         form = TeamForm()
@@ -54,20 +55,23 @@ def update_match(request, match_id):
         match.completed = True
         match.save()
         
-        # Atualizar o bracket após registrar o resultado de uma partida
-        generate_bracket_visual(match.modalidade)
+        generate_bracket_visual(match.modality)
         return redirect('index')
     return render(request, 'core/update_match.html', {'match': match})
 
 @login_required
-def modalidade_detail(request, modalidade_slug):
-    modalidade = get_object_or_404(Modalidade, slug=modalidade_slug)
-    teams = Team.objects.filter(modalidade=modalidade)
-    matches = Match.objects.filter(modalidade=modalidade)
-    bracket_path = generate_bracket_visual(modalidade)
+def modality_detail(request, modality_slug):
+    modality = get_object_or_404(Modality, slug=modality_slug)
+    teams = Team.objects.filter(modality=modality)
+    matches = Match.objects.filter(modality=modality)
+    bracket_path = generate_bracket_visual(modality)
     return render(request, 'core/modality_detail.html', {
-        'modalidade': modalidade,
+        'modality': modality,
         'teams': teams,
         'matches': matches,
         'bracket_path': bracket_path
     })
+
+def bracket_view(request, modality_id):
+    modality = get_object_or_404(Modality, id=modality_id)
+    return render(request, 'bracket.html', {'modality': modality})

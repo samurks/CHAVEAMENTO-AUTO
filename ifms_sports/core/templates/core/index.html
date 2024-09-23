@@ -1,10 +1,26 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h2>Modalidades</h2>
-<ul>
-    {% for modalidade in modalidades %}
-    <li><a href="{% url 'modalidade_detail' modalidade.slug %}">{{ modalidade.nome }}</a></li>
-    {% endfor %}
-</ul>
+<div class="container my-5">
+    <h1 class="text-center">Modalidades</h1>
+    <div id="modalidadesCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for modality in modalities %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <h5>{{ modality.name }}</h5>
+                <p>{{ modality.description }}</p>
+                <a href="{% url 'bracket' modality.id %}" class="btn btn-marinho">Ver Chaveamento</a>
+            </div>
+            {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#modalidadesCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#modalidadesCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     console.log("JavaScript carregado com sucesso!");
 
-    // Adicione um log para verificar se as modalidades estão sendo capturadas
     document.querySelectorAll('.dropdown-item').forEach(item => {
         console.log(`Modalidade encontrada: ${item.getAttribute('data-id')}`);
         item.addEventListener('click', function(event) {

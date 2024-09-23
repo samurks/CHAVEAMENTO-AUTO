@@ -1,7 +1,6 @@
-# settings.py
-
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Caminho base do projeto
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,8 +15,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Aplicações instaladas
-# settings.py
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,8 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'django.contrib.humanize',  # Ativa a formatação amigável para humanos
 ]
-
 
 # Middleware
 MIDDLEWARE = [
@@ -38,6 +35,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Middleware de localização adicionado
     'core.middleware.RequireLoginMiddleware',
 ]
 
@@ -81,8 +79,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Localização e fuso horário
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'pt-br'
+TIME_ZONE = 'America/Campo_Grande'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -101,3 +99,20 @@ LOGIN_URL = 'login'
 
 # Definir campo padrão para chaves primárias
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LANGUAGE_CODE = 'pt-br'
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('pt-br', _('Portuguese')),
+]
+
+MIDDLEWARE += [
+    'django.middleware.locale.LocaleMiddleware',
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'core/locale'),
+]
