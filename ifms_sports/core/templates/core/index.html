@@ -1,95 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block content %}
-<div class="container dynamic-content">
-    <header>
-        <h1>IFMS - Gerenciador de Chaveamento</h1>
-
-        <!-- Início do Carrossel de Modalidades -->
-        <div id="modalidadeCarrossel" class="carousel slide" data-ride="carousel" data-interval="3000">
-            <div class="carousel-inner">
-                {% if modalidades %}
-                    {% for modalidade in modalidades %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}" data-slug="{{ modalidade.slug }}">
-                            <div class="d-block w-100 text-center">
-                                <h3>{{ modalidade.nome }}</h3>
-                                <button class="btn btn-primary select-modalidade" data-slug="{{ modalidade.slug }}">
-                                    Ver Chaveamento
-                                </button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="carousel-item active">
-                        <div class="d-block w-100">
-                            <h3 class="text-center">Nenhuma modalidade encontrada. Cadastre novas modalidades para visualizar o chaveamento.</h3>
-                        </div>
-                    </div>
-                {% endif %}
-            </div>
-            <a class="carousel-control-prev" href="#modalidadeCarrossel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#modalidadeCarrossel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
-        <!-- Fim do Carrossel de Modalidades -->
-
-    </header>
-    <div id="main-content">
-        <p>Selecione uma modalidade acima para visualizar o chaveamento e times.</p>
-    </div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const app = document.getElementById('main-content');
-
-      function loadBracket(slug) {
-          fetch(`/bracket/${slug}/`)
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error(`Erro ao carregar conteúdo: ${response.status}`);
-                  }
-                  return response.text();
-              })
-              .then(html => {
-                  console.log("Conteúdo carregado com sucesso");
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(html, 'text/html');
-
-                  const content = doc.querySelector('.dynamic-content');
-                  console.log("HTML retornado: ", doc.body.innerHTML);
-                  if (content) {
-                      console.log("Conteúdo dinâmico encontrado, atualizando DOM");
-                      app.innerHTML = content.innerHTML;
-                  } else {
-                      console.error("Conteúdo dinâmico não encontrado no HTML retornado.");
-                      app.innerHTML = "<p>Conteúdo dinâmico não encontrado. Verifique o conteúdo retornado e o template do HTML.</p>";
-                  }
-              })
-              .catch(error => {
-                  console.error("Erro ao carregar o conteúdo:", error);
-                  app.innerHTML = "<p>Erro ao carregar o conteúdo. Verifique o console para mais detalhes.</p>";
-              });
-      }
-
-      console.log("JavaScript carregado com sucesso!");
-
-      document.querySelectorAll('.select-modalidade').forEach(button => {
-          button.addEventListener('click', function() {
-              const modalidadeSlug = this.getAttribute('data-slug');
-              if (modalidadeSlug) {
-                  console.log(`Redirecionando para o chaveamento da modalidade: ${modalidadeSlug}`);
-                  loadBracket(modalidadeSlug);
-              } else {
-                  console.error("Slug da modalidade não encontrado.");
-              }
-          });
-      });
-  });
-</script>
-
+<h2>Modalidades</h2>
+<ul>
+    {% for modalidade in modalidades %}
+    <li><a href="{% url 'modalidade_detail' modalidade.slug %}">{{ modalidade.nome }}</a></li>
+    {% endfor %}
+</ul>
 {% endblock %}
