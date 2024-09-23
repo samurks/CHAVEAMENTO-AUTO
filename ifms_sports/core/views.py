@@ -6,11 +6,11 @@ from .forms import SignUpForm, PlayerForm, TeamForm
 from .utils import generate_bracket_visual
 
 def index(request):
-    modality = Modality.objects.all()
-    print(modality)
-    if not modality.exists():
-        modality = None
-    return render(request, 'core/index.html', {'modality': modality})
+    modalities = Modality.objects.all()
+    if not modalities.exists():
+        modalities = None
+    return render(request, 'core/index.html', {'modalities': modalities})
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -72,6 +72,6 @@ def modality_detail(request, modality_slug):
         'bracket_path': bracket_path
     })
 
-def bracket_view(request, modality_id):
-    modality = get_object_or_404(Modality, id=modality_id)
-    return render(request, 'bracket.html', {'modality': modality})
+def bracket_view(request, modality_slug):
+    modality = get_object_or_404(Modality, id=modality_slug)
+    return render(request, 'core/bracket.html', {'modality': modality})

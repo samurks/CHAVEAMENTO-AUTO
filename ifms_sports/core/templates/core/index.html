@@ -8,8 +8,7 @@
             {% for modality in modalities %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                 <h5>{{ modality.name }}</h5>
-                <p>{{ modality.description }}</p>
-                <a href="{% url 'bracket' modality.id %}" class="btn btn-marinho">Ver Chaveamento</a>
+                <a href="{% url 'modality_detail' modality.slug %}" class="btn btn-marinho">Ver Chaveamento</a>
             </div>
             {% endfor %}
         </div>
