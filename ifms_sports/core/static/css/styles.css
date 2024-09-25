@@ -1,42 +1,62 @@
-body {
-  background-color: #f0f0f0;
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: navy !important;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: none !important;
 }
 
-.navbar-brand {
-  color: #007bff !important;
+.carousel-control-prev,
+.carousel-control-next {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 128, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-h1.display-4, .carousel-caption h5 {
-  color: #333;
+.carousel-control-prev-icon::after,
+.carousel-control-next-icon::after {
+    content: '‹';
+    font-family: Arial, sans-serif;
+    font-size: 30px;
+    color: white;
 }
 
-
-/* Customização dos botões */
-.btn-marinho {
-  background-color: #1a237e; /* Azul marinho */
-  color: #ffffff;
-  font-weight: bold;
+.carousel-control-next-icon::after {
+    content: '›';
 }
 
-.btn-marinho:hover {
-  background-color: #0d1b58; /* Mais escuro no hover */
+.card {
+    margin: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
 }
-/* Customização do carrossel */
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-body {
+    text-align: center;
+}
+
 .carousel-item {
-  text-align: center;
-  padding: 40px 20px;
-  min-height: 200px; /* Define um tamanho mínimo para o carrossel */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.carousel-item h5 {
-  font-weight: bold;
-  color: #1a237e; /* Azul marinho */
+.carousel-item .col-md-4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.carousel-item img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 20px; /* Espaço entre a imagem e o texto */
+.carousel-item.active {
+    display: flex !important;
 }
-
-
