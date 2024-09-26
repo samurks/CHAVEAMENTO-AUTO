@@ -72,6 +72,17 @@ def modality_detail(request, modality_slug):
         'bracket_path': bracket_path
     })
 
+
 def bracket_view(request, modality_slug):
-    modality = get_object_or_404(Modality, id=modality_slug)
-    return render(request, 'core/bracket.html', {'modality': modality})
+    modality = get_object_or_404(Modality, slug=modality_slug)
+    # Geração do gráfico de chaveamento
+    graph_path = generate_bracket_visual(modality, output_format='svg')
+    if graph_path:
+        graph_url = f'/media/{graph_path}'
+    else:
+        graph_url = None
+
+    return render(request, 'core/bracket.html', {
+        'modality': modality,
+        'graph_url': graph_url
+    })

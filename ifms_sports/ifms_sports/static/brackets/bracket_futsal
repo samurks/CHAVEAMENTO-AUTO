@@ -1,29 +1,39 @@
 // Chaveamento de Futsal
 digraph {
-	nodesep=1.0 rankdir=LR ranksep=1.5 splines=line
-	Match0_0 [label="INFO6A vs INFO3A" shape=box]
-	Team0 [label=INFO6A shape=box]
-	Team0 -> Match0_0
-	Team1 [label=INFO3A shape=box]
-	Team1 -> Match0_0
-	Match0_1 [label="AGRO1A vs INFO1A" shape=box]
-	Team2 [label=AGRO1A shape=box]
-	Team2 -> Match0_1
-	Team3 [label=INFO1A shape=box]
-	Team3 -> Match0_1
-	Match0_2 [label="INFO3B vs AGRO1B" shape=box]
-	Team4 [label=INFO3B shape=box]
-	Team4 -> Match0_2
-	Team5 [label=AGRO1B shape=box]
-	Team5 -> Match0_2
-	Match0_3 [label="Bye vs Bye" shape=box]
-	Match1_0 [label="" shape=box]
-	Match0_0 -> Match1_0
-	Match0_1 -> Match1_0
-	Match1_1 [label="" shape=box]
-	Match0_2 -> Match1_1
-	Match0_3 -> Match1_1
-	Match2_0 [label="" shape=box]
-	Match1_0 -> Match2_0
-	Match1_1 -> Match2_0
+	nodesep=0.3 rankdir=LR ranksep=0.5 splines=line
+	Left_Match0_0 [label="INFO6A vs INFO2B" shape=rect style=rounded]
+	TeamL0 [label=INFO6A shape=rect style=rounded]
+	TeamL0 -> Left_Match0_0
+	TeamL1 [label=INFO2B shape=rect style=rounded]
+	TeamL1 -> Left_Match0_0
+	Left_Match0_1 [label="INFO4B vs AGRO6B" shape=rect style=rounded]
+	TeamL2 [label=INFO4B shape=rect style=rounded]
+	TeamL2 -> Left_Match0_1
+	TeamL3 [label=AGRO6B shape=rect style=rounded]
+	TeamL3 -> Left_Match0_1
+	Right_Match0_0 [label="AGRO2B vs AGRO4A" shape=rect style=rounded]
+	TeamR0 [label=AGRO2B shape=rect style=rounded]
+	TeamR0 -> Right_Match0_0
+	TeamR1 [label=AGRO4A shape=rect style=rounded]
+	TeamR1 -> Right_Match0_0
+	Right_Match0_1 [label="AGRO2A vs INFO2A" shape=rect style=rounded]
+	TeamR2 [label=AGRO2A shape=rect style=rounded]
+	TeamR2 -> Right_Match0_1
+	TeamR3 [label=INFO2A shape=rect style=rounded]
+	TeamR3 -> Right_Match0_1
+	Left_Merge1_0 [shape=point width=0]
+	Left_Match0_0 -> Left_Merge1_0
+	Left_Match0_1 -> Left_Merge1_0
+	Left_Match1_0 [label="Por Definir" shape=rect style=rounded]
+	Left_Merge1_0 -> Left_Match1_0
+	Right_Merge1_0 [shape=point width=0]
+	Right_Match0_0 -> Right_Merge1_0
+	Right_Match0_1 -> Right_Merge1_0
+	Right_Match1_0 [label="Por Definir" shape=rect style=rounded]
+	Right_Merge1_0 -> Right_Match1_0
+	Center_Merge [shape=point width=0]
+	"Por Definir" -> Center_Merge
+	"Por Definir" -> Center_Merge
+	Final_Match [label="Por Definir" shape=rect style=rounded]
+	Center_Merge -> Final_Match
 }

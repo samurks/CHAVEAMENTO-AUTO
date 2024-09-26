@@ -36,7 +36,7 @@ h1.display-4, .carousel-caption h5 {
 .carousel-item img {
   max-width: 100%;
   height: auto;
-  margin-bottom: 20px; /* Espaço entre a imagem e o texto */
+  margin-bottom: 20px;
 }
 
 
